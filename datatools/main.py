@@ -12,10 +12,15 @@ def run(args):
     result = None
     setA = set()
     setB = set()
-    for item in handle_file(args.fileA, args.delimiter, args.column,
+    fileA = args.fileA
+    fileB = args.fileB
+    if args.swap:
+        fileA = args.fileB
+        fileB = args.fileA
+    for item in handle_file(fileA, args.delimiter, args.column,
                             args.no_headers):
         setA.add(item)
-    for item in handle_file(args.fileB, args.delimiter, args.column,
+    for item in handle_file(fileB, args.delimiter, args.column,
                             args.no_headers):
         setB.add(item)
     if args.operation == 'subtract':
@@ -50,6 +55,13 @@ def parse_args():
                                 help='The operation to perform: "A op B".',
                                 choices=('add', 'subtract', 'multiply'),
                                 default='subtract')
+    compare_parser.add_argument(
+        '-s',
+        '--swap',
+        action='store_true',
+        help=
+        'File A is now File B and vice versa, this is simply to save time on copying/pasting/formatting via the command-line'
+    )
     compare_parser.add_argument(
         '-nh',
         '--no_headers',
